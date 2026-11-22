@@ -1,0 +1,53 @@
+Downloading sqlalchemy (4.4MiB)
+Downloading asyncpg (3.6MiB)
+ Downloaded asyncpg
+ Downloaded sqlalchemy
+Installed 4 packages in 20ms
+Q1 reltuples fresh empty table: -1.0
+Q1 reltuples after bulk insert, before ANALYZE: -1.0
+Q1 reltuples after ANALYZE: 1000000.0
+
+Q2 row-value: best-of-5 0.62 ms, rows=50
+Limit rows=50 bufs=53
+  Index Scan [ix_orders_created_id] cond=(ROW(created_at, id) > ROW('2026-10-02 17:31:15.031181+00'::timestamp with time zone, '49999'::bigint)) rows=50 bufs=53
+  exec=0.07ms
+
+Q3 expanded OR: best-of-5 86.03 ms, rows=50
+Limit rows=50 bufs=501969
+  Index Scan [ix_orders_created_id] filter=((created_at > '2026-10-02 17:31:15.031181+00'::timestamp with time zone) OR ((created_at = '2026-10-02 17:31:15.031181+00'::timestamp with time zone) AND (id > '49999'::bigint))) rows=50 bufs=501969
+  exec=85.87ms
+
+Q3 >= AND OR: best-of-5 0.60 ms, rows=50
+Limit rows=50 bufs=54
+  Index Scan [ix_orders_created_id] cond=(created_at >= '2026-10-02 17:31:15.031181+00'::timestamp with time zone) filter=((created_at > '2026-10-02 17:31:15.031181+00'::timestamp with time zone) OR (id > '49999'::bigint)) rows=50 bufs=54
+  exec=0.07ms
+
+Q5 OFFSET N/2: best-of-5 85.73 ms, rows=50
+Limit rows=50 bufs=501968
+  Index Scan [ix_orders_created_id] rows=500050 bufs=501968
+  exec=105.17ms
+
+Q3 mixed-direction (DESC, ASC) >=/OR form: 0.62 ms
+Limit rows=50 bufs=64
+  Incremental Sort rows=50 bufs=64
+    Index Only Scan [ix_orders_created_id] cond=(created_at <= '2026-10-02 17:31:15.031181+00'::timestamp with time zone) filter=((created_at < '2026-10-02 17:31:15.031181+00'::timestamp with time zone) OR (id > '49999'::bigint)) rows=60 bufs=64
+  exec=0.10ms
+
+Q4 (NULL,1)>(0,0)=None  (1,NULL)>(0,0)=True  (1,NULL)>(1,0)=None
+Q4 nullable single-predicate: 0.76 ms
+Limit rows=50 bufs=1058
+  Index Only Scan [ix_orders_shipped_id] filter=((shipped_at > '2026-04-12 10:50:15.031181+00'::timestamp with time zone) OR ((shipped_at = '2026-04-12 10:50:15.031181+00'::timestamp with time zone) AND (id > '509992'::bigint)) OR (shipped_at IS NULL)) rows=50 bufs=1058
+  exec=0.33ms
+
+Q4 nullable non-null phase only: 0.56 ms
+Limit rows=50 bufs=122
+  Index Only Scan [ix_orders_shipped_id] cond=(shipped_at >= '2026-04-12 10:50:15.031181+00'::timestamp with time zone) filter=((shipped_at > '2026-04-12 10:50:15.031181+00'::timestamp with time zone) OR (id > '509992'::bigint)) rows=50 bufs=122
+  exec=0.11ms
+
+Q6 exact count(*): 20.62 ms -> 1000000
+Q6 exact filtered count: 28.34 ms -> 250000
+Q6 capped count 10001: 2.95 ms -> 10001
+Q6 reltuples: 0.39 ms -> 1000000
+Q6 EXPLAIN estimate (filtered): 0.96 ms -> 253367
+   actual: 250000
+{"rows": 1000000, "pg": "17.10"}

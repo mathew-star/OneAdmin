@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens. Components use only these (via the Tailwind names below), so a theme is a
+ * matter of redefining the variables. Light and dark follow the operating system.
+ */
+:root {
+  color-scheme: light dark;
+  --oa-bg: #f4f5f3;
+  --oa-surface: #ffffff;
+  --oa-surface-muted: #f7f8f6;
+  --oa-border: #dde2de;
+  --oa-border-strong: #b7c0b9;
+  --oa-text: #19211c;
+  --oa-text-muted: #647068;
+  --oa-accent: #46691d;
+  --oa-accent-hover: #345315;
+  --oa-accent-soft: #eaf2dc;
+  --oa-accent-fg: #ffffff;
+  --oa-shadow: rgb(20 30 20 / 0.12);
+  --oa-danger: #b33242;
+  --oa-danger-soft: #fcebed;
+  --oa-success: #397449;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --oa-bg: #111315;
+    --oa-surface: #191c1e;
+    --oa-surface-muted: #202426;
+    --oa-border: #32383a;
+    --oa-border-strong: #4b5555;
+    --oa-text: #edf0eb;
+    --oa-text-muted: #9fa9a3;
+    --oa-accent: #c9ed75;
+    --oa-accent-hover: #ddfb95;
+    --oa-accent-soft: #303c22;
+    --oa-accent-fg: #19200d;
+    --oa-shadow: rgb(0 0 0 / 0.4);
+    --oa-danger: #ff8990;
+    --oa-danger-soft: #3c252a;
+    --oa-success: #91d69c;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--oa-bg);
+  --color-surface: var(--oa-surface);
+  --color-surface-muted: var(--oa-surface-muted);
+  --color-border: var(--oa-border);
+  --color-border-strong: var(--oa-border-strong);
+  --color-fg: var(--oa-text);
+  --color-muted: var(--oa-text-muted);
+  --color-accent: var(--oa-accent);
+  --color-accent-hover: var(--oa-accent-hover);
+  --color-accent-soft: var(--oa-accent-soft);
+  --color-accent-fg: var(--oa-accent-fg);
+  --color-danger: var(--oa-danger);
+  --color-danger-soft: var(--oa-danger-soft);
+  --color-success: var(--oa-success);
+  --font-sans: "Ubuntu Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: "Ubuntu Sans", "Avenir Next", "Segoe UI", sans-serif;
+  --font-mono: "Ubuntu Sans Mono", "Cascadia Code", "SF Mono", monospace;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-bg text-fg font-sans text-sm antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility font-display {
+  font-family: var(--font-display);
+}

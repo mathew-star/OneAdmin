@@ -1,0 +1,137 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "oneadmin"
+dynamic = ["version"]
+description = "Fast, secure, async admin panel for FastAPI + SQLAlchemy 2"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"  # provisional, see docs/adr/0013-license.md
+authors = [{ name = "OneAdmin contributors" }]
+keywords = ["fastapi", "sqlalchemy", "admin", "crud", "asyncio"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Framework :: FastAPI",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+dependencies = [
+    "fastapi>=0.115",
+    "sqlalchemy[asyncio]>=2.0.36,<2.2",
+    "pydantic>=2.10,<3",
+    "orjson>=3.10",
+    "argon2-cffi>=23.1",
+    "typing-extensions>=4.12",
+    "alembic>=1.13",
+    "rich-click>=1.9.9,<2",
+]
+
+[project.optional-dependencies]
+postgres = ["asyncpg>=0.30"]
+sqlite = ["aiosqlite>=0.20"]
+# `oneadmin demo`: a local server and a SQLite driver.
+demo = ["uvicorn>=0.30", "aiosqlite>=0.20"]
+
+[project.scripts]
+oneadmin = "oneadmin.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9",
+    "pytest-asyncio>=1.3",
+    "testcontainers[postgres]>=4.10",
+    "httpx>=0.28",
+    "asyncpg>=0.30",
+    "aiosqlite>=0.21",
+    "uvicorn>=0.34",
+    "ruff>=0.15",
+    "mypy>=1.18",
+    "coverage[toml]>=7.10",
+]
+docs = ["mkdocs>=1.6", "mkdocs-material>=9.6"]
+
+[tool.hatch.version]
+path = "src/oneadmin/__about__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/oneadmin"]
+artifacts = ["src/oneadmin/static/**"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/oneadmin",
+    "frontend",
+    "hatch_build.py",
+    "README.md",
+    "LICENSE",
+]
+exclude = ["frontend/node_modules", "frontend/dist"]
+artifacts = ["src/oneadmin/static/**"]
+
+[tool.hatch.build.hooks.custom]
+path = "hatch_build.py"
+
+# ---------------------------------------------------------------- tooling
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests", "examples"]
+extend-exclude = ["*.md", "docs/research/experiments", "backend"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "SIM", "RUF", "PT", "ASYNC", "TID", "PL"]  # no TC: SQLAlchemy/Pydantic resolve annotations at runtime
+ignore = ["PLR0913", "PLR2004", "PLR0911", "PLR0912", "PLR0915", "PLR0917", "E501"]  # E501: the formatter owns line length
+
+[tool.ruff.lint.isort]
+known-first-party = ["oneadmin", "examples", "tests"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106", "PLR2004", "S608", "TID251", "RUF012"]  # RUF012: ModelAdmin options are plain class-level dicts
+"docs/research/experiments/**" = ["ALL"]
+"scripts/**" = ["S603", "S607", "T201"]
+"examples/**" = ["TID251", "RUF012"]
+"src/oneadmin/demo/**" = ["RUF012"]
+"benchmarks/compare/**" = ["RUF012"]  # sqladmin's own option style  # ModelAdmin options are plain class-level dicts
+"hatch_build.py" = ["S603", "S607"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"sqlalchemy.text".msg = "Raw SQL text is banned in library code; build expressions (allowed in tests via noqa)."
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+files = ["src", "tests", "examples", "benchmarks"]
+plugins = ["pydantic.mypy"]
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["tests.*"]
+disallow_untyped_calls = false  # SQLAlchemy dialect constructors are untyped
+
+[[tool.mypy.overrides]]
+module = ["testcontainers.*", "sqladmin.*", "starlette_admin.*"]
+ignore_missing_imports = true  # sqladmin/starlette-admin: only the comparison benchmark
+
+[tool.pytest.ini_options]
+minversion = "9.0"
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+markers = [
+    "pg: requires PostgreSQL (testcontainers or ONEADMIN_TEST_PG_URL)",
+]
+filterwarnings = ["error"]
+
+[tool.coverage.run]
+source = ["oneadmin"]
+branch = true

@@ -1,0 +1,61 @@
+site_name: OneAdmin
+site_description: The admin panel for FastAPI and SQLAlchemy 2.
+docs_dir: docs
+strict: true
+repo_name: oneadmin
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle: {icon: material/brightness-7, name: Dark mode}
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle: {icon: material/brightness-4, name: Light mode}
+markdown_extensions:
+  - admonition
+  - tables
+  - toc: {permalink: true}
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+nav:
+  - Home: index.md
+  - Guide:
+      - Getting started: guide/getting-started.md
+      - ModelAdmin reference: guide/model-admin.md
+      - Customising OneAdmin: guide/customising.md
+      - Using the admin UI: guide/ui.md
+      - Editing, permissions & audit: guide/editing-permissions-audit.md
+      - Multi-tenancy: guide/multi-tenancy.md
+      - Authentication & CLI: guide/auth-and-cli.md
+      - Alembic integration: guide/alembic.md
+      - HTTP API: guide/api.md
+      - Coming from sqladmin: guide/from-sqladmin.md
+  - Compared with other admins: comparison.md
+  - Project:
+      - Architecture: architecture.md
+      - Contributing: contributing.md
+      - Release process: release-process.md
+      - Roadmap: ROADMAP.md
+      - Plan: PLAN.md
+      - Design decisions: DECISIONS.md
+      - Security & threat model: security/threat-model.md
+      - Open questions: OPEN_QUESTIONS.md
+      - Journal: JOURNAL.md
+not_in_nav: |
+  /adr/
+  /milestones/
+  /pilot/
+  /research/
+  /design/
+  /guide/README.md
+exclude_docs: |
+  research/experiments/

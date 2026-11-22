@@ -1,0 +1,17 @@
+{"sort": "-created_at", "tenant": null, "depth": 0, "keyset": {"p50_ms": 0.988, "p95_ms": 1.169}, "offset": {"p50_ms": 0.778, "p95_ms": 0.911}}
+{"sort": "-created_at", "tenant": null, "depth": 10000, "keyset": {"p50_ms": 1.142, "p95_ms": 1.258}, "offset": {"p50_ms": 2.833, "p95_ms": 3.346}}
+{"sort": "-created_at", "tenant": null, "depth": 100000, "keyset": {"p50_ms": 1.067, "p95_ms": 1.338}, "offset": {"p50_ms": 20.336, "p95_ms": 21.089}}
+{"sort": "-created_at", "tenant": null, "depth": 300000, "keyset": {"p50_ms": 1.118, "p95_ms": 1.428}, "offset": {"p50_ms": 57.9, "p95_ms": 59.369}}
+{"sort": "-shipped_at", "tenant": null, "depth": 0, "keyset": {"p50_ms": 0.968, "p95_ms": 1.126}, "offset": {"p50_ms": 0.756, "p95_ms": 0.825}}
+{"sort": "-shipped_at", "tenant": null, "depth": 10000, "keyset": {"p50_ms": 2.325, "p95_ms": 3.044}, "offset": {"p50_ms": 1.783, "p95_ms": 2.2}}
+{"sort": "-shipped_at", "tenant": null, "depth": 100000, "keyset": {"p50_ms": 2.159, "p95_ms": 2.623}, "offset": {"p50_ms": 12.2, "p95_ms": 12.694}}
+{"sort": "-shipped_at", "tenant": null, "depth": 300000, "keyset": {"p50_ms": 2.561, "p95_ms": 3.23}, "offset": {"p50_ms": 34.687, "p95_ms": 42.209}}
+{"sort": "-created_at", "tenant": 2, "depth": 0, "keyset": {"p50_ms": 1.036, "p95_ms": 1.337}, "offset": {"p50_ms": 0.763, "p95_ms": 0.957}}
+{"sort": "-created_at", "tenant": 2, "depth": 10000, "keyset": {"p50_ms": 1.194, "p95_ms": 1.473}, "offset": {"p50_ms": 3.219, "p95_ms": 3.518}}
+{"sort": "-created_at", "tenant": 2, "depth": 100000, "keyset": {"p50_ms": 1.156, "p95_ms": 1.353}, "offset": {"p50_ms": 23.269, "p95_ms": 23.865}}
+{"sort": "-created_at", "tenant": 2, "depth": 300000, "keyset": {"p50_ms": 1.153, "p95_ms": 1.623}, "offset": {"p50_ms": 66.642, "p95_ms": 70.489}}
+exact_unfiltered {'p50_ms': 28.217, 'p95_ms': 29.07}
+auto_unfiltered {'p50_ms': 0.536, 'p95_ms': 0.69}
+exact_tenant {'p50_ms': 32.282, 'p95_ms': 33.537}
+auto_tenant(capped) {'p50_ms': 4.589, 'p95_ms': 5.209}
+{"rows": 1000000, "pg": "PostgreSQL 17.10 on x86_64-pc-linux-musl", "python": "3.13.14"}

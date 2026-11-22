@@ -1,0 +1,51 @@
+{
+  "name": "oneadmin-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "packageManager": "pnpm@10.25.0",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && node scripts/check-bundle.mjs",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "typecheck": "tsc --noEmit",
+    "gen:api": "openapi-typescript openapi.json -o src/api/openapi.d.ts",
+    "check:api": "node scripts/check-api-types.mjs",
+    "build:install": "pnpm build && node scripts/install-static.mjs"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.106.1",
+    "@tanstack/react-router": "1.170.46",
+    "lucide-react": "1.70.0",
+    "radix-ui": "1.8.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@biomejs/biome": "2.6.6",
+    "@playwright/test": "1.65.0",
+    "@tailwindcss/vite": "4.3.5",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.8",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "happy-dom": "21.0.4",
+    "openapi-typescript": "7.13.0",
+    "tailwindcss": "4.3.5",
+    "typescript": "6.0.3",
+    "vite": "8.3.6",
+    "vitest": "5.1.0"
+  }
+}
