@@ -96,7 +96,7 @@ jobs:
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm test:e2e
       - if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: frontend/test-results/
@@ -122,7 +122,7 @@ jobs:
           uv venv /tmp/smoke
           uv pip install --python /tmp/smoke/bin/python dist/*.whl
           /tmp/smoke/bin/oneadmin --version
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: dist
           path: dist/
