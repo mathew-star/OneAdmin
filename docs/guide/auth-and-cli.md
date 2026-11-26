@@ -54,7 +54,7 @@ Every state-changing request needs:
 - a same-origin `Origin` header (compared by host, so TLS-terminating proxies work), or `Sec-Fetch-Site: same-origin`
 - when authenticated, the `X-CSRF-Token` header from `POST /auth/login` or `GET /auth/session`
 
-Add other hosts with `AdminSite(trusted_origins=["https://admin.example.com"])`.
+Add other hosts to the CSRF allowlist with `AdminSite(trusted_origins=["https://admin.example.com"])`. For a separate-host UI, the host app must also configure credentialed CORS and cookies suitable for that deployment; the bundled UI uses same-origin requests. If a reverse proxy rewrites `Host`, add the browser-facing origin here or preserve the original `Host` in the proxy.
 
 ## Rate limiting
 - Defaults: 5 failed logins per email or 20 per client IP within 15 minutes. The response is `429` with `Retry-After`.

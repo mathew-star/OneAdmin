@@ -8,6 +8,7 @@ from typing import Any
 import pytest
 from sqlalchemy import select
 from sqlalchemy.dialects import postgresql, sqlite
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.sql.elements import ColumnElement
 
 from oneadmin.core.errors import (
@@ -18,6 +19,7 @@ from oneadmin.core.errors import (
     InvalidSort,
 )
 from oneadmin.core.meta import introspect
+from oneadmin.core.query.counting import _is_timeout
 from oneadmin.core.query.cursor import Cursor, CursorCodec
 from oneadmin.core.query.filters import parse_filters, to_sql
 from oneadmin.core.query.keyset import keyset_segments, pagination_mode
@@ -270,3 +272,8 @@ def test_search_limits_and_config() -> None:
         search_clause(fields, "a" * 201)
     with pytest.raises(ConfigurationError, match="Use '=grp'"):
         compile_search_fields(ITEM, ["grp"])
+def test_only_statement_timeouts_are_count_timeouts() -> None:
+    canceled = DBAPIError("SELECT 1", {}, Exception("canceling statement due to user request"))
+    timed_out = DBAPIError("SELECT 1", {}, Exception("canceling statement due to statement timeout"))
+    assert not _is_timeout(canceled)
+    assert _is_timeout(timed_out)

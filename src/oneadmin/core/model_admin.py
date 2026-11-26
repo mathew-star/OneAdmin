@@ -125,7 +125,7 @@ class ModelAdmin(Generic[M]):
     """How list totals are computed: ``auto`` (estimate for big unfiltered tables, else capped),
     ``exact``, ``capped``, ``estimate`` or ``none``. See ADR-0004."""
 
-    count_concurrently: ClassVar[bool] = True
+    count_concurrently: ClassVar[bool] = False
     """Run the count on a second connection in parallel with the page query."""
 
     name: ClassVar[str | None] = None

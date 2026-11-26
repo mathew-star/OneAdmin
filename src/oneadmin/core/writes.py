@@ -30,6 +30,7 @@ from sqlalchemy import insert, literal, select, tuple_
 from sqlalchemy import inspect as sa_inspect
 from sqlalchemy.exc import IntegrityError, OperationalError, ProgrammingError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import undefer
 
 from oneadmin.auth import tables as t
 from oneadmin.auth.service import AdminNotMigrated, is_missing_table
@@ -273,7 +274,7 @@ class WriteService:
                 keys.append(decode_pk(c.meta, raw))
             except (ValueError, KeyError):
                 raise NotFound(_missing(admin, len(raw_pks))) from None
-        stmt = await admin.apply_scope(ctx, select(c.model))
+        stmt = await admin.apply_scope(ctx, select(c.model).options(undefer("*")))
         stmt = stmt.where(_pk_in(c, keys)).with_for_update(of=c.model)
         rows = list((await ctx.session.execute(stmt)).scalars().unique())
         if len(rows) != len(set(keys)):

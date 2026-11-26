@@ -101,8 +101,9 @@ async def test_only_loopback_clients_are_served(engine: AsyncEngine, ip: str) ->
 
 
 async def test_ipv6_loopback_is_served(engine: AsyncEngine) -> None:
-    async with client(dev_site(engine), client_ip="::1") as c:
-        assert (await c.get("/auth/setup")).status_code == 200
+    for ip in ("::1", "::ffff:127.0.0.1"):
+        async with client(dev_site(engine), client_ip=ip) as c:
+            assert (await c.get("/auth/setup")).status_code == 200
 
 
 async def test_chunked_auth_body_is_limited(engine: AsyncEngine) -> None:

@@ -67,8 +67,9 @@ class AdminSite:
         conventions: Site-wide rules applied to every registered model before its own
             options (``oneadmin.conventions``): read-only or hidden fields by name,
             field types, labels, filters, and ``scope_by`` for multi-tenancy.
-        trusted_origins: Extra full origins (``"https://admin.example.com"``) allowed to make
-            state-changing requests, for deployments where the UI and API hosts differ.
+        trusted_origins: Extra full origins (``"https://admin.example.com"``) allowed through
+            the CSRF origin check. Separate-host UIs also need CORS and suitable cookie settings
+            configured by the host app; the bundled UI uses same-origin API requests.
         dev: Development mode, for trying OneAdmin locally with zero setup. Default: the
             ``ONEADMIN_DEV`` environment variable (``1``/``true``). In dev mode:
 

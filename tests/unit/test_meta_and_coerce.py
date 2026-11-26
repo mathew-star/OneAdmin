@@ -6,11 +6,28 @@ from decimal import Decimal
 from typing import Any
 
 import pytest
+from sqlalchemy import String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from oneadmin.core.coerce import from_json, parse_text, to_json
 from oneadmin.core.errors import ConfigurationError
 from oneadmin.core.meta import introspect
-from tests.models import Color, Item, Pair
+from oneadmin.core.wire import decode_pk, encode_pk
+from tests.models import Color, Item, Pair, TBase
+
+
+class PathKey(TBase):
+    __tablename__ = "test_path_key"
+    key: Mapped[str] = mapped_column(String, primary_key=True)
+
+
+def test_string_primary_keys_are_safe_path_segments() -> None:
+    meta = introspect(PathKey)
+    for key in ("team/project-1", "~leading", "ordinary"):
+        encoded = encode_pk(meta, (key,))
+        assert "/" not in encoded
+        assert decode_pk(meta, encoded) == (key,)
+    assert encode_pk(meta, ("ordinary",)) == "ordinary"
 
 ITEM = introspect(Item)
 

@@ -110,5 +110,4 @@ async def _estimate(session: AsyncSession, qualified_table: str) -> int | None:
 
 def _is_timeout(exc: DBAPIError) -> bool:
     orig = exc.orig
-    code = getattr(orig, "sqlstate", None) or getattr(orig, "pgcode", None)
-    return code == "57014" or "statement timeout" in str(orig)
+    return "statement timeout" in str(orig).lower()

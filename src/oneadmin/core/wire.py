@@ -27,7 +27,10 @@ __all__ = ["JS_SAFE_INT", "decode_pk", "encode_pk", "to_wire"]
 def encode_pk(meta: ModelMeta, values: tuple[Any, ...]) -> str:
     if len(meta.pk) == 1:
         v = values[0]
-        return v.name if isinstance(v, enum.Enum) else str(meta.pk[0].field_type.to_wire(v))
+        raw = v.name if isinstance(v, enum.Enum) else str(meta.pk[0].field_type.to_wire(v))
+        if "/" in raw or raw.startswith("~"):
+            return "~" + base64.urlsafe_b64encode(raw.encode()).rstrip(b"=").decode()
+        return raw
     body = json.dumps(
         [to_json(v, f) for f, v in zip(meta.pk, values, strict=True)], separators=(",", ":")
     ).encode()
@@ -39,6 +42,11 @@ def decode_pk(meta: ModelMeta, raw: str) -> tuple[Any, ...]:
     if len(raw) > 1_000:
         raise ValueError("primary key too long")
     if len(meta.pk) == 1:
+        if raw.startswith("~"):
+            try:
+                raw = base64.b64decode(raw[1:] + "=" * (-(len(raw) - 1) % 4), altchars=b"-_", validate=True).decode()
+            except (binascii.Error, UnicodeDecodeError, ValueError) as exc:
+                raise ValueError("malformed primary key") from exc
         return (parse_text(meta.pk[0], raw),)
     try:
         data = json.loads(base64.urlsafe_b64decode(raw + "=" * (-len(raw) % 4)))

@@ -10,7 +10,7 @@ You are the sole principal engineer and technical owner of `oneadmin`, an open-s
 - **Python:** 3.11–3.14 (ADR-0007; SQLAlchemy 2.1 and Starlette 1.x need ≥3.11). Strictly `uv` (`uv sync`, `uv run`, `uv add`). Never raw `pip` or `poetry`.
 - **Packaging:** `hatchling` + `hatch_build.py` (ADR-0009). Builds `frontend/` with pnpm into `src/oneadmin/static/`. If prebuilt assets exist (sdist → wheel), it reuses them. If neither assets nor pnpm are available, it fails loudly.
 - **Backend:** FastAPI/Starlette, SQLAlchemy `>=2.0.36,<2.2` async, Pydantic v2, orjson, argon2-cffi.
-- **Frontend:** Vite, React 19, TS strict, TanStack Router + Query, `@tanstack/react-virtual` (infinite mode only), Tailwind 4, `radix-ui`, `cmdk`, openapi-typescript, Biome. **No TanStack Table in v1** (ADR-0011).
+- **Frontend:** Vite, React 19, TS strict, TanStack Router + Query, Tailwind 4, `radix-ui`, `cmdk`, openapi-typescript, Biome. **No TanStack Table in v1** (ADR-0011).
 - **Testing:** pytest + pytest-asyncio against real PostgreSQL (testcontainers; `ONEADMIN_TEST_PG_URL` overrides), Vitest, Playwright + axe.
 
 ## Invariants (break one only via an ADR)

@@ -30,7 +30,8 @@ def is_loopback(host: str | None) -> bool:
     if host == "localhost":
         return True
     try:
-        return ipaddress.ip_address(host).is_loopback
+        ip = ipaddress.ip_address(host)
+        return (getattr(ip, "ipv4_mapped", None) or ip).is_loopback
     except ValueError:
         return False
 
